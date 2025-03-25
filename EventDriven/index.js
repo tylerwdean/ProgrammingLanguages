@@ -12,7 +12,7 @@ todoButton.addEventListener("click", (e) => {
     //get the input value and add it to the todo list
     const todoItem = todoInput.value;
     addItemToList(todoItem, counter);
-    storedData=[...storedData, {text: todoItem, counter}]
+    storedData = [...storedData, { text: todoItem, counter }]
     counter++;
     console.log(todoItem);
 
@@ -23,27 +23,27 @@ todoButton.addEventListener("click", (e) => {
 
 })
 
-function addItemToList(text, counter, checked=false) {
+function addItemToList(text, counter, checked = false) {
     console.log("Add item called");
     listDiv = document.getElementById("list");
     const newElement = document.createElement("div");
-    newElement.id = "div-"+counter;
+    newElement.id = "div-" + counter;
     listDiv.appendChild(newElement);
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = checked;
-    checkbox.id = "checkbox-"+counter;
+    checkbox.id = "checkbox-" + counter;
     checkbox.addEventListener("change", () => updateCheckbox(counter))
 
     const p = document.createElement("label");
-    let textNode = document.createTextNode(text+" ");
+    let textNode = document.createTextNode(text + " ");
     p.appendChild(textNode);
-    p.id = "p-"+counter;
+    p.id = "p-" + counter;
 
     const removeButton = document.createElement("button");
     textNode = document.createTextNode("Remove Task");
-    removeButton.id = "button-"+counter;
+    removeButton.id = "button-" + counter;
     removeButton.appendChild(textNode);
     removeButton.addEventListener("click", () => removeElement(counter));
 
@@ -54,28 +54,33 @@ function addItemToList(text, counter, checked=false) {
     listDiv.appendChild(newElement);
 }
 
-function removeElement(counter){
+function removeElement(counter) {
     console.log("Removing element" + counter);
-    document.getElementById("div-"+counter).remove();
+    document.getElementById("div-" + counter).remove();
     storedData = storedData.filter((item) => item.counter != counter);
     saveList();
+    checkForCompletion();
 }
 
-function saveList(){
+function saveList() {
     localStorage.setItem("storedData", JSON.stringify(storedData));
 }
 
-function updateCheckbox(counter){
-    console.log("Checkbox-"+counter+" updated");
-    storedData = storedData.map((item) => item.counter == counter ? {...item, checked: !item.checked} : item);
+function updateCheckbox(counter) {
+    console.log("Checkbox-" + counter + " updated");
+    storedData = storedData.map((item) => item.counter == counter ? { ...item, checked: !item.checked } : item);
 
+    checkForCompletion();
+    saveList();
+}
+
+function checkForCompletion() {
     let allChecked = true;
-    for (let i = 0; i < storedData.length; i++){
+    for (let i = 0; i < storedData.length; i++) {
         allChecked = allChecked && storedData[i].checked;
     }
 
-    if (allChecked){
+    if (allChecked) {
         alert("You finished all your tasks!");
     }
-    saveList();
 }
