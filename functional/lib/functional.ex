@@ -7,33 +7,59 @@ defmodule Functional do
   end
 
   def main do
-    splitIntoSentences("Tommy is my best friend")
+    countWordsAndSentences("Tommy is my best friend. We enjoy hanging out. Is that a good reason to be best friends?")
+  end
+
+  def countWordsAndSentences(text) do
+
+    sentencesList = splitIntoSentences(text)
+    numOfSentences = length(sentencesList)
+
+    IO.inspect({sentencesList, numOfSentences})
+
   end
 
   def splitIntoSentences(text) do
-    splitIntoSentences(text, String.length(text), [], "")
+    splitIntoSentences(text, byte_size(text), [], <<>>)
   end
 
   def splitIntoSentences(text, remChars, sentences, currentWord) do
     if remChars == 0 do
       sentences
     else
-      case String.at(text, 0) do
-        "." -> ^sentences = sentences ++ [currentWord]
-        "?" -> ^sentences = sentences ++ [currentWord]
-        "!" -> ^sentences = sentences ++ [currentWord]
-        _ -> ^currentWord = String.at(text, 0) + currentWord
+      <<currentChar::utf8, remText::binary>> = text
+
+      {newSentences, word} = case currentChar do
+        ?. ->
+          newSentences = sentences ++ [currentWord]   #Using the ?[char] compares the code point, which is what the byte thing did
+          {newSentences, <<>>}
+        ?? ->
+          newSentences = sentences ++ [currentWord]
+          {newSentences, <<>>}
+        ?! ->
+          newSentences = sentences ++ [currentWord]
+          {newSentences, <<>>}
+        _ ->
+          {sentences, currentWord <> <<currentChar::8>> }
       end
-      text = String.slice(text, 1..String.length(text))
-      splitIntoSentences(text, remChars-1, sentences, currentWord)
+      #IO.inspect({remText, remChars-1, newSentences, word}) #For debugging purposes
+      splitIntoSentences(remText, remChars-1, newSentences, word)
     end
   end
 
-  def countSentences(text) do
-    length(String.split(text, ~r{[?.!]}))-1
+  def splitWords(text) do
+    splitWords(text, byte_size(text), [], <<>>)
   end
 
-  def countWords(text) do
-    IO.inspect(String.split(text, ~r{[\W]+}))-1
+  def splitWords(text, remChars, wordList, currentWord) do
+    if remChars == 0 do
+      wordList
+    else
+      <<currentChar::int8, remaining::binary>> = text
+      case currentChar do
+        ?\s ->
+          splitWords(remaining, remChars-1, wordList ++ [currentWord], <<>>)
+      end
+    end
   end
 end
