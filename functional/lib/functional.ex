@@ -73,7 +73,8 @@ defmodule Functional do
     #I want to do a for loop here for each item in wordList ahhhhhhh
     wordCounts = mapWords(splitWords(text))
     IO.inspect(wordCounts)
-    topTen()
+    IO.inspect(topTen(wordCounts))
+
 
   end
 
@@ -97,33 +98,67 @@ defmodule Functional do
     end
   end
 
-  def topTen(wordCount) do
-    topTen(wordCount, Map.keys(wordCount), {})
+  def topTen(wordCounts) do
+    #Adds a value with negative count, so will always be less and can be replaced as the function runs
+    wordCounts = Map.put(wordCounts, "base counts", -1)
+    baseTopTen = ["base counts", "base counts", "base counts", "base counts", "base counts", "base counts", "base counts", "base counts", "base counts","base counts"]
+    #IO.puts("Initialized baseTopTen")
+    topTen(wordCounts, Map.keys(wordCounts), 0, baseTopTen)
   end
 
-  def topTen(wordCount, allKeys, currentKey, topTenList) do
-    if currentKey == length(allKeys) do
-      topTenList
+  def topTen(wordCounts, allKeys, currentKeyIndex, topTenList) do
+    if currentKeyIndex == length(allKeys) do
+      topTenList = List.delete(topTenList, "base counts")
+      topTenList = List.delete(topTenList, "base counts")
+      topTenList = List.delete(topTenList, "base counts")
+      topTenList = List.delete(topTenList, "base counts")
+      topTenList = List.delete(topTenList, "base counts")
+      topTenList = List.delete(topTenList, "base counts")
+      topTenList = List.delete(topTenList, "base counts")
+      topTenList = List.delete(topTenList, "base counts")
+      topTenList = List.delete(topTenList, "base counts")
+      List.delete(topTenList, "base counts")
     else
-
+      topTenList = insertIntoOrderedList(topTenList, 9, Enum.at(allKeys, currentKeyIndex), wordCounts)
+      topTen(wordCounts, allKeys, currentKeyIndex+1, topTenList)
     end
 
   end
 
-  def insertIntoOrderedList(list, i, value) do
-    if (list[i] > value) do
-      #if we aren't going to add anything to the list
-      if (length(list) == i+1) do
-        list
-      # we need to add stuff into the list, below the current value
-      else
+  def insertIntoOrderedList(list, i, key, dict) do
+    #if (i < 15) do
+    #  IO.inspect(list)
+    #  IO.inspect(i)
+    #  IO.inspect(key)
+    #end
 
-      end
-    else
-      if (list[i] < value ) do
-        insertIntoOrderedList(list, i-1, value)
+    if (Map.get(dict, Enum.at(list, i)) > Map.get(dict, key) || key == nil) do
+      #if we aren't going to add anything to the list
+      if (i+1 >= length(list)) do
+        list
+      #this is if the current value is less, but it's already a little down the list so it needs to be inserted
       else
-        #The case when they're equal, or
+        originalKey = Enum.at(list, i+1)
+        modifiedList = List.replace_at(list, i+1, key)
+        insertIntoOrderedList(modifiedList, i+1, originalKey, dict)
+      end
+      #This is when the value is bigger, check for a bigger index
+    else
+      #if the things compared are the same, replace the element under the current element with the compared element
+      if (Map.get(dict, Enum.at(list, i)) == Map.get(dict, key)) do
+        originalKey = Enum.at(list, i+1)
+        modifiedList = List.replace_at(list, i+1, key)
+        insertIntoOrderedList(modifiedList, i+1, originalKey, dict)
+      else
+      #value > Enum.at(list, i]
+        if (i == 0) do
+          originalKey = Enum.at(list, i)
+          modifiedList = List.replace_at(list, i, key)
+          insertIntoOrderedList(modifiedList, i, originalKey, dict)
+
+        else
+          insertIntoOrderedList(list, i-1, key, dict)
+        end
       end
     end
   end
