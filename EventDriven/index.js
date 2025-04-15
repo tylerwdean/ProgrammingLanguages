@@ -4,24 +4,32 @@ let counter = localStorage.getItem("counter") || 0;
 let storedData = JSON.parse(localStorage.getItem("storedData")) || [];
 storedData.map((item) => addItemToList(item.text, item.counter, item.checked));
 
-todoButton.addEventListener("click", (e) => {
-    //stop whatever the click would have done
-    e.preventDefault();
-    console.log("Add item pressed")
-
-    //get the input value and add it to the todo list
-    const todoItem = todoInput.value;
-    addItemToList(todoItem, counter);
-    storedData = [...storedData, { text: todoItem, counter }]
-    counter++;
-    console.log(todoItem);
-
-    //set the input back to nothing
-    todoInput.value = "";
-    localStorage.setItem("counter", String(counter));
-    saveList();
-
+todoInput.addEventListener("keydown", (e) => {
+    if (e.key === 'Enter') submitToDo(e);
 })
+
+todoButton.addEventListener("click", (e) => submitToDo(e))
+
+function submitToDo(e){
+        //stop whatever the click would have done
+        e.preventDefault();
+        console.log("Add item pressed")
+    
+        //get the input value and add it to the todo list
+        const todoItem = todoInput.value;
+
+        if (todoItem.length < 1) return;
+
+        addItemToList(todoItem, counter);
+        storedData = [...storedData, { text: todoItem, counter }]
+        counter++;
+        console.log(todoItem);
+    
+        //set the input back to nothing
+        todoInput.value = "";
+        localStorage.setItem("counter", String(counter));
+        saveList();
+}
 
 function addItemToList(text, counter, checked = false) {
     console.log("Add item called");

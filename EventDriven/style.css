@@ -1,0 +1,86 @@
+:root {
+    --primary: #005F73;
+    --light: #FEFEFE;
+    --dark: #001219;
+    --secondary: #94D2BD;
+    --danger: #AE2012;
+    --warning: #EE9B00;
+    --success: #0A9396;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--warning);
+    color: var(--dark);
+}
+
+h1 {
+    background-color: var(--primary);
+    color: var(--light);
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+}
+
+#list {
+    margin-top: 15px;
+    padding: 26px;
+    background-color: #005F73;
+    border-radius: 5px;
+    color: var(--light);
+}
+
+
+
+#list div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#list label {
+    margin-right: 10px;
+}
+#list input {
+    accent-color:var(--warning);
+    margin: 8px;
+}
+
+#list button {
+    background-color: var(--danger);
+    color: var(--light);
+    border: none;
+    border-radius: 2px;
+    padding: 5px;
+}
+
+.add-bar {
+    color: var(--light);
+}
+
+.add-bar input {
+    background-color: var(--primary);
+    border-radius: 5px;
+    border: none;
+    color: var(--light);
+    padding: 5px;
+}
+
+.add-bar input::placeholder {
+    color: var(--light);
+}
+
+.add-bar button {
+    background-color: var(--success);
+    border-radius: 3px;
+    border: none;
+    padding: 5px;
+    color: var(--light);
+}
