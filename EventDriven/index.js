@@ -1,8 +1,10 @@
 const todoButton = document.getElementById("addItem");
 const todoInput = document.getElementById("todo");
+const emptyList = document.getElementById("emptyList");
 let counter = localStorage.getItem("counter") || 0;
 let storedData = JSON.parse(localStorage.getItem("storedData")) || [];
 storedData.map((item) => addItemToList(item.text, item.counter, item.checked));
+checkForEmptyTasks();
 
 todoInput.addEventListener("keydown", (e) => {
     if (e.key === 'Enter') submitToDo(e);
@@ -29,6 +31,7 @@ function submitToDo(e){
         todoInput.value = "";
         localStorage.setItem("counter", String(counter));
         saveList();
+        checkForEmptyTasks();
 }
 
 function addItemToList(text, counter, checked = false) {
@@ -68,6 +71,7 @@ function removeElement(counter) {
     storedData = storedData.filter((item) => item.counter != counter);
     saveList();
     checkForCompletion();
+    checkForEmptyTasks();
 }
 
 function saveList() {
@@ -88,7 +92,18 @@ function checkForCompletion() {
         allChecked = allChecked && storedData[i].checked;
     }
 
-    if (allChecked) {
+    if (allChecked && storedData.length > 1) {
         alert("You finished all your tasks!");
+    }
+}
+
+function checkForEmptyTasks(){
+    console.log(storedData);
+    if (storedData.length < 1){
+        emptyList.style.visibility = 'visible'; 
+        emptyList.style.display = 'block';
+    } else {
+        emptyList.style.visibility = 'hidden';
+        emptyList.style.display = 'none';
     }
 }
