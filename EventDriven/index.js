@@ -92,7 +92,7 @@ function checkForCompletion() {
         allChecked = allChecked && storedData[i].checked;
     }
 
-    if (allChecked && storedData.length > 1) {
+    if (allChecked && storedData.length > 0) {
         alert("You finished all your tasks!");
     }
 }
